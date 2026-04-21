@@ -5,118 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #18222d); /* Темный фон ТГ */
-            color: var(--tg-theme-text-color, #ffffff);
-            overflow-x: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #b55e6c, #8e4359);
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
-        .gift-image {
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
-        }
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-        .subtitle {
-            background-color: rgba(0,0,0,0.2);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .stats-container {
-            padding: 20px;
-        }
-        .stats-table {
-            background-color: #232e3c;
-            border-radius: 15px;
-            overflow: hidden;
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .stats-table td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 15px;
-        }
-        .stats-table td:first-child {
-            color: #8b96a5;
-            width: 40%;
-        }
-        .stats-table td:last-child {
-            text-align: right;
-            font-weight: 500;
-        }
+        body { margin: 0; padding: 0; font-family: sans-serif; background-color: #18222d; color: white; overflow-x: hidden; }
+        .header { background: linear-gradient(135deg, #b55e6c, #8e4359); padding: 30px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+        .gift-image { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
+        .title { font-size: 24px; font-weight: bold; margin-top: 15px; }
+        .subtitle { background-color: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 12px; font-size: 12px; display: inline-block; margin-top: 5px; }
+        .stats-container { padding: 20px; }
+        .stats-table { background-color: #232e3c; border-radius: 15px; overflow: hidden; width: 100%; border-collapse: collapse; }
+        .stats-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; }
+        .stats-table td:first-child { color: #8b96a5; width: 40%; }
+        .stats-table td:last-child { text-align: right; font-weight: 500; }
         .highlight { color: #3390ec; }
-        .close-btn {
-            background-color: #3390ec;
-            color: white;
-            border: none;
-            width: calc(100% - 40px);
-            margin: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
+        .close-btn { background-color: #3390ec; color: white; border: none; width: calc(100% - 40px); margin: 20px; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <img src="https://i.imgur.com/example.png" class="gift-image" alt="Gift">
-        <div class="title">Snoop Dogg <span style="color: rgba(255,255,255,0.7); font-weight: normal;">#412 744</span></div>
+        <img id="gift-img" src="" class="gift-image" alt="Gift">
+        <div class="title" id="gift-title">Загрузка...</div>
         <div class="subtitle">выпущен @snoopdogg</div>
     </div>
-
     <div class="stats-container">
         <table class="stats-table">
-            <tr>
-                <td>Владелец</td>
-                <td><span class="highlight">Gift Relayer 🤖</span></td>
-            </tr>
-            <tr>
-                <td>Модель</td>
-                <td>Fish Hat <span class="highlight">3%</span></td>
-            </tr>
-            <tr>
-                <td>Узор</td>
-                <td>Bubble Tea <span class="highlight">0.4%</span></td>
-            </tr>
-            <tr>
-                <td>Фон</td>
-                <td>Mystic Pearl <span class="highlight">1.2%</span></td>
-            </tr>
-            <tr>
-                <td>Количество</td>
-                <td>581 059, выпущено 593 781</td>
-            </tr>
+            <tr><td>Владелец</td><td><span class="highlight">Gift Relayer 🤖</span></td></tr>
+            <tr><td>Модель</td><td>Fish Hat <span class="highlight">3%</span></td></tr>
+            <tr><td>Ценность</td><td><span class="highlight">~1 033 UAH</span></td></tr>
         </table>
     </div>
-
     <button class="close-btn" onclick="Telegram.WebApp.close()">ЗАКРЫТЬ И ПРОДОЛЖИТЬ</button>
 
     <script>
-        // Инициализация Telegram Web App
         let tg = window.Telegram.WebApp;
-        tg.expand(); // Открыть на всю высоту
+        tg.expand();
+        
+        // Бот передаст ссылки в адресной строке, мы их читаем:
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('gift-img').src = urlParams.get('img') || "https://i.imgur.com/fallback.png";
+        document.getElementById('gift-title').innerHTML = urlParams.get('name') || "Подарок";
     </script>
 </body>
 </html>
